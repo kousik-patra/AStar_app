@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>3D A* Pathfinding</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; line-height: 1.6; }
+        .container { max-width: 500px; margin: auto; border: 1px solid #ccc; padding: 20px; border-radius: 8px; }
+        input, button { display: block; width: 100%; margin-bottom: 10px; padding: 8px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>3D A* Shortest Path</h2>
+        <form id="pathForm">
+            <label>Upload Node CSV (ID, X, Y, Z)</label>
+            <input type="file" id="csvFile" accept=".csv" required>
+            
+            <input type="text" id="startNode" placeholder="Start Node (e.g., N001)" required>
+            <input type="text" id="endNode" placeholder="End Node (e.g., N050)" required>
+            
+            <button type="submit">Calculate Path</button>
+        </form>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        document.getElementById('pathForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const formData = new FormData();
+            formData.append('file', document.getElementById('csvFile').files[0]);
+            formData.append('start', document.getElementById('startNode').value);
+            formData.append('end', document.getElementById('endNode').value);
+
+            const response = await fetch('/solve', { method: 'POST', body: formData });
+            const data = await response.json();
+            document.getElementById('result').innerText = "Path: " + JSON.stringify(data.path);
+        };
+    </script>
+</body>
+</html>
